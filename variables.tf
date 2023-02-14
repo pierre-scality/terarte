@@ -10,6 +10,11 @@ variable "instance_size" {
     }
 }
 
+# If training = 1 it will allow access from all IP
+variable "training" {
+  default = 0
+}
+
 # This one will be used to create hostname 
 # Artesca complins if if you use _ use - and others not suported by RFC
 variable "this_deployment" {

@@ -133,13 +133,13 @@ resource "aws_security_group_rule" "ring_allow_ingress_scality_office_supervisor
 	security_group_id = aws_security_group.scality_office.id
 }
 
-resource "aws_security_group_rule" "ring_allow_ingress_scality_office_dsup_http" {
+resource "aws_security_group_rule" "allow_all_access" {
+  count = var.training == 1 ? 1 : 0
 	type            = "ingress"
-	from_port       = 3080
-	to_port         = 3080
-	protocol        = "tcp"
+	from_port       = 0
+	to_port         = 65535
+	protocol        = "all"
 	cidr_blocks     = [
-		
 		var.scality_office_ip_colt,
 		var.scality_office_ip_orange,
 		var.scality_vpn_ip,

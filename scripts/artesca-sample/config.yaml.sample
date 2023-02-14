@@ -1,0 +1,1136 @@
+kind: InputConfiguration
+apiVersion: artesca.scality.com/v1alpha2
+platform:
+  bootstrap:
+    networks:
+      controlPlane:
+        ingress:
+          controller:
+            replicas: 3
+            affinity:
+              podAntiAffinity:
+                hard:
+                - topologyKey: kubernetes.io/hostname
+        cidr: 10.200.0.0/16
+        metalLB:
+          enabled: false
+      workloadPlane:
+        cidr: 10.200.0.0/16
+    kubernetes:
+      coreDNS:
+        replicas: 3
+        affinity:
+          podAntiAffinity:
+            hard:
+            - topologyKey: kubernetes.io/hostname
+      cni:
+        calico:
+          ipipMode: Always
+  services:
+    prometheus:
+      spec:
+        deployment:
+          replicas: 3
+        config:
+          retention_size: 51GiB
+    alertmanager:
+      spec:
+        deployment:
+          replicas: 3
+    loki:
+      spec:
+        deployment:
+          replicas: 3
+          resources:
+            limits:
+              memory: 48Gi
+        config:
+          schema_config:
+            configs:
+            - from: '2022-04-15'
+              index:
+                period: 24h
+                prefix: index_
+              object_store: filesystem
+              schema: v9
+              store: boltdb
+          table_manager:
+            retention_period: 168h
+    ui:
+      spec:
+        deployment:
+          replicas: 2
+          affinity:
+            podAntiAffinity:
+              hard:
+              - topologyKey: kubernetes.io/hostname
+  nodes:
+    pmarte3n-1: {}
+    pmarte3n-2:
+      registry: true
+      ssh:
+        host: pmarte3n-2
+        key: /etc/metalk8s/pki/salt-bootstrap
+        port: 22
+        sudo: false
+        user: root
+    pmarte3n-3:
+      registry: true
+      ssh:
+        host: pmarte3n-3
+        key: /etc/metalk8s/pki/salt-bootstrap
+        port: 22
+        sudo: false
+        user: root
+  etcd_lv:
+    vgName: vgartesca
+    size: 5G
+volumes:
+  storage-data-1-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdb
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-2-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdc
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-3-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdd
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-4-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vde
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-5-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdf
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-6-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdg
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-7-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdh
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-8-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdi
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-9-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdj
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-10-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdk
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-11-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdl
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-12-pmarte3n-1:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdm
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-1
+  storage-data-1-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdb
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-2-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdc
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-3-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdd
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-4-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vde
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-5-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdf
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-6-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdg
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-7-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdh
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-8-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdi
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-9-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdj
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-10-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdk
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-11-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdl
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-12-pmarte3n-3:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdm
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-3
+  storage-data-1-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdb
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-2-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdc
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-3-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdd
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-4-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vde
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-5-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdf
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-6-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdg
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-7-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdh
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-8-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdi
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-9-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdj
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-10-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdk
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-11-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdl
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  storage-data-12-pmarte3n-2:
+    storageClassName: hdd-ext4
+    rawBlockDevice:
+      devicePath: /dev/vdm
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: data
+    nodeName: pmarte3n-2
+  prometheus-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 60Gi
+    nodeName: pmarte3n-1
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-prometheus
+  alertmanager-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 2Gi
+    nodeName: pmarte3n-1
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-alertmanager
+  loki-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-1
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: loki
+  keycloak-postgresql-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 20Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: keycloak-postgresql
+  storage-index-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 79Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: index
+  storage-kafka-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 10Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: xcore
+  storage-zookeeper-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: xcore
+  data-mongodb-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 191Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb
+          app.kubernetes.io/part-of: zenko
+  data-mongodb-config-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 8Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb-sharded-config
+          app.kubernetes.io/part-of: zenko
+  data-kafka-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: zenko
+  data-zookeeper-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: zenko
+  data-local-pmarte3n-1:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 100Mi
+    nodeName: pmarte3n-1
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: localData
+          app.kubernetes.io/part-of: zenko
+  prometheus-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 60Gi
+    nodeName: pmarte3n-2
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-prometheus
+  alertmanager-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 2Gi
+    nodeName: pmarte3n-2
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-alertmanager
+  loki-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-2
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: loki
+  keycloak-postgresql-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 20Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: keycloak-postgresql
+  storage-index-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 79Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: index
+  storage-kafka-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 10Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: xcore
+  storage-zookeeper-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: xcore
+  data-mongodb-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 191Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb
+          app.kubernetes.io/part-of: zenko
+  data-mongodb-config-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 8Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb-sharded-config
+          app.kubernetes.io/part-of: zenko
+  data-kafka-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: zenko
+  data-zookeeper-pmarte3n-2:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-2
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: zenko
+  prometheus-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 60Gi
+    nodeName: pmarte3n-3
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-prometheus
+  alertmanager-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 2Gi
+    nodeName: pmarte3n-3
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: prometheus-operator-alertmanager
+  loki-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-3
+    storageClassName: metalk8s
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: loki
+  keycloak-postgresql-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 20Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: keycloak-postgresql
+  storage-index-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 79Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          xcore.scality.com/volume-type: index
+  storage-kafka-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 10Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: xcore
+  storage-zookeeper-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: xcore
+  data-mongodb-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 191Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb
+          app.kubernetes.io/part-of: zenko
+  data-mongodb-config-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 8Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: mongodb-sharded-config
+          app.kubernetes.io/part-of: zenko
+  data-kafka-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 40Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: kafka
+          app.kubernetes.io/part-of: zenko
+  data-zookeeper-pmarte3n-3:
+    lvmLogicalVolume:
+      vgName: vgartesca
+      size: 5Gi
+    nodeName: pmarte3n-3
+    storageClassName: ssd-raid1-ext4
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/name: zookeeper
+          app.kubernetes.io/part-of: zenko
+base:
+  keycloak:
+    replicas: 3
+    postgresql:
+      replicas: 3
+    storageClassName: ssd-raid1-ext4
+  ui:
+    shell_hostname: shell.pm3n.com
+storage:
+  spec:
+    protection:
+    - schema:
+        data: 2
+        coding: 1
+        partsize: 1024000
+        type: isa-l
+        writeConsistencyLevel: minimal
+    - schema:
+        copies: 2
+        partsize: 1024000
+        type: replication
+        writeConsistencyLevel: minimal
+    traits:
+    - sync_ec
+    - low_overhead
+    prometheus:
+      enable: true
+    repair:
+      type: banzai
+      clusterref:
+        name: xcore-kafka
+      topic: repair
+      partition: 1
+      replica: 3
+    proxy:
+      replicas: 3
+      requestTimeout: 10000
+      slowRequestThreshold: 1000
+    servers:
+    - data:
+      - name: data-01
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-02
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-03
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-04
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-05
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-06
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-07
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-08
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-09
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-10
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-11
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-12
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      index:
+        name: index
+        persistentVolume:
+          storageClassName: ssd-raid1-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: index
+      nodeName: pmarte3n-1
+    - data:
+      - name: data-01
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-02
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-03
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-04
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-05
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-06
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-07
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-08
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-09
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-10
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-11
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-12
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      index:
+        name: index
+        persistentVolume:
+          storageClassName: ssd-raid1-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: index
+      nodeName: pmarte3n-2
+    - data:
+      - name: data-01
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-02
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-03
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-04
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-05
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-06
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-07
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-08
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-09
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-10
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-11
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      - name: data-12
+        persistentVolume:
+          storageClassName: hdd-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: data
+      index:
+        name: index
+        persistentVolume:
+          storageClassName: ssd-raid1-ext4
+          selector:
+            matchLabels:
+              xcore.scality.com/volume-type: index
+      nodeName: pmarte3n-3
+  kafka:
+    storageClassName: ssd-raid1-ext4
+  zookeeper:
+    storageClassName: ssd-raid1-ext4
+data:
+  crSpec:
+    replicas: 3
+    vault:
+      enable: true
+      replicas: 30
+      iamIngress:
+        hostname: iam.pm3n.com
+      stsIngress:
+        hostname: sts.pm3n.com
+    internalCloudserver:
+      enable: true
+    sorbet:
+      enable: true
+    cloudserver:
+      replicas: 30
+    management:
+      provider: InCluster
+      ui:
+        ingress:
+          hostname: ui.pm3n.com
+      api:
+        allowFrom:
+        - 0.0.0.0/0
+        ingress:
+          hostname: management.pm3n.com
+    ingress:
+      workloadPlaneClass: nginx
+      controlPlaneClass: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 0m
+        nginx.ingress.kubernetes.io/proxy-buffering: 'off'
+        nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+    mongodb:
+      provider: External
+      endpoints: []
+      writeConcern: majority
+      enableSharding: true
+    redis:
+      provider: Zenko
+    kafka:
+      provider: Managed
+      persistence:
+        volumeClaimTemplate:
+          storageClassName: ssd-raid1-ext4
+          size: 40Gi
+          selector:
+            matchLabels:
+              app.kubernetes.io/name: kafka
+              app.kubernetes.io/part-of: zenko
+    zookeeper:
+      provider: Managed
+      persistence:
+        volumeClaimTemplate:
+          storageClassName: ssd-raid1-ext4
+          size: 5Gi
+          selector:
+            matchLabels:
+              app.kubernetes.io/name: zookeeper
+              app.kubernetes.io/part-of: zenko
+    localData:
+      persistence:
+        volumeClaimTemplate:
+          storageClassName: ssd-raid1-ext4
+          size: 100Mi
+          selector:
+            matchLabels:
+              app.kubernetes.io/name: localData
+              app.kubernetes.io/part-of: zenko
+  mongodb:
+    storageClassName: ssd-raid1-ext4
+    credentials:
+      root:
+        name: root
+        password: gEZIxDzGGLlkxhcKFaU19Odg
+      user:
+        name: artesca-data
+        password: c52iyuQyoYoHP5Dn8Do6AaNl
+  s3_hostname: s3.pm3n.com

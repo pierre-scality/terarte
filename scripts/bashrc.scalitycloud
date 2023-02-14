@@ -1,0 +1,68 @@
+# .bashrc
+
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+export ENVF=~/.bashrc
+export TMF=~/.tmux.conf
+export EDITOR=vi
+export PS2=""
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+export S3EP=10.80.17.10
+export S3PROF=pierre
+export AWS=/srv/scality/s3/s3-offline/venv/bin/aws
+
+alias src=". $ENVF"
+alias vrc="vi  $ENVF"
+alias sr="sudo su -"
+alias ta="tmux -f $TMF attach -t"
+alias tn="tmux -f $TMF new -s"
+alias tl="tmux -f $TMF ls"
+alias sr="sudo su -"
+alias vvv='echo set tabstop=2 shiftwidth=2 expandtab'
+alias rr="/root/Dev/scality-tools/rr.py"
+alias es="curl -Ls http://localhost:4443/api/v0.1/es_proxy/_cluster/health?pretty=true"
+#alias zk='salt -G roles:ROLE_ZK_NODE cmd.run "echo status |nc  localhost 2181| grep Mode" --output=txt'
+alias zk='salt -C "G@roles:ROLE_ZK_NODE and not G@scal_zookeeper_spare:True" cmd.run "/usr/share/java/zookeeper/bin/zkServer.sh --config /var/local/scality-zookeeper/zkdata status"'
+alias aws="$AWS"
+alias a="$AWS --endpoint=http://$S3EP --profile"
+alias e="$AWS --profile $S3PROF --endpoint=http://"
+alias vrs="vi  .ssh/config"
+alias k="kubectl --kubeconfig /etc/kubernetes/admin.conf"
+alias fed="cd /srv/scality/s3/*/federation/"
+
+
+cloneall () {
+git clone https://github.com/pierre-scality/scality-tools.git
+git clone https://github.com/pierre-scality/cust-formulas.git
+git clone https://github.com/pierre-scality/sef
+git clone https://github.com/pierre-scality/scalstatus.git
+}
+
+
+
+function gps () {
+ps -edf | grep "$1" | grep -v grep
+}
+
+function sshconfig ()
+{
+    conf=~/.ssh/config;
+    param=$1;
+    if [ ${param:=null} == null ]; then
+        cat $conf | grep --color=auto -i '^host';
+    else
+        echo "param for $param";
+        sed "1,/^[H|h]ost $param/d;/^[H|h]ost*/,\$d" $conf;
+    fi
+}
+

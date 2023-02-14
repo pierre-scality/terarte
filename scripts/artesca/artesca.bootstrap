@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# To run on the bootstrap node only
+
+PKG="install python36 tmux bc"
+echo $PKG
+yum -y $PKG
+
+
+mkdir -p /etc/metalk8s/pki
+ssh-keygen -t rsa -b 4096 -N '' -f /etc/metalk8s/pki/salt-bootstrap
+

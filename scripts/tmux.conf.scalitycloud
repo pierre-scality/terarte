@@ -1,0 +1,41 @@
+set -g prefix C-x
+bind < swap-window -t :-
+bind > swap-window -t :+
+bind | split-window -h # split into left and right panes
+bind \ split-window -h
+bind o rotate-window # rotate panes around in current window
+bind-key y set-window-option synchronize-panes on
+bind-key Y set-window-option synchronize-panes off
+#bind Left resize-pane -L 5
+#bind Right resize-pane -R 5
+#bind Up resize-pane -U 5
+#bind Down resize-pane -D 5
+bind-key M-1 select-layout even-horizontal
+bind v select-layout even-horizontal
+bind V select-layout main-vertical
+bind h select-layout even-vertical
+bind H select-layout main-horizontal
+bind t select-layout tiled
+bind x kill-pane
+bind X kill-window
+bind r source-file ~/.tmux.conf \; display-message " * reloaded ~/.tmux.conf"
+# behavior
+set -g base-index 1 # start window numbering from 1 instead of 0
+setw -g automatic-rename on # automatically name windows
+set -g set-titles on # auto set the terminal's window title
+#setw -g mode-mouse on # copy with mouse in copy mode
+#set -g mouse-select-pane on # let mouse switch panes
+#set -g mouse-resize-pane on
+#set -g mouse-select-window on
+# appearance
+#set -g default-terminal "screen-256color" # full colors for apps
+#set -g status-left-length 45
+set -g status-left ' #[underscore]#20H#[default]:#[fg=black]#S#[default]'
+#set -g status-right ':#! #{session_name} '
+set -g status-right ':#! #S '
+setw -g window-status-format ' #I #W ' # window name formatting
+setw -g window-status-current-format ' >> #I #W '
+#set -g status-bg green # dark yellow status bar
+set -g set-titles-string '[#I] #W'
+set -g allow-rename off
+#set -g renumber-windows on

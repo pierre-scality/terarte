@@ -1,0 +1,1 @@
+ ./artesca-installer config generate -a 3-nodes -p 'Virtual Machine' --workload-plane-cidr 10.0.0.0/16 --ipip-always --use-case generic --output config.yaml --no-managed-control-plane-ingress-vip --base-domain pme.org

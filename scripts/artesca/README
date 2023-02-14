@@ -1,0 +1,5 @@
+artesca.bootstrap : Download the installer -> Change version in the script
+artesca.sh: Prepare the DG and package -> run on all 3 nodes
+artesca.url: Command to get artesca url after install
+artesca.user: Command to create the admin user (It does not work :-( )
+README

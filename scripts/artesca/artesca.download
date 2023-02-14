@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# To run on the bootstrap node only
+
+VERSION=1.6.4
+USER=pierre.merle
+
+RELDIR=/srv/scality/releases/
+
+cd /root
+if [ ! -d $RELDIR ] ; then 
+echo "Release directory must exists before running this script"
+exit 
+fi
+
+echo "Is the version $VERSION and user $USER the one you want ? If not ctrl c and variable, any key to continue"
+read dummy
+
+
+printf 'User %s passwd : ' $USER
+read -s PASS
+printf '\nGetting Artesca %s\n' $VERSION
+curl --fail -sLo artesca-installer https://packages.scality.com/Artesca/$VERSION/artesca-installer -u $USER:$PASS || echo "ERROR"
+curl --fail -sLo SHA256SUM https://packages.scality.com/Artesca/$VERSION/SHA256SUM -u $USER:$PASS || echo "ERROR"
+sha256sum -c SHA256SUM
+chmod +x ./artesca-installer 
+
+./artesca-installer get --ask-password --username $USER -P $PASS
